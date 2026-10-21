@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathNovaUMG | Asistente de Precálculo</title>
+<style>
+:root{--navy:#10264a;--blue:#2459a9;--gold:#f2b544;--bg:#f3f6fb;--ink:#17253b;--muted:#65748b;--green:#137547;--red:#b42318}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header{background:linear-gradient(125deg,#10264a,#2459a9);color:white;padding:30px 18px}
+.hero{max-width:1150px;margin:auto}
+.brand{font-size:clamp(27px,5vw,42px);font-weight:800;letter-spacing:.4px;margin:0}
+.brand span{color:var(--gold)}
+header p{margin:8px 0 0;color:#e4ecfa}
+.pill{display:inline-block;background:#ffffff1c;border:1px solid #ffffff44;border-radius:20px;padding:5px 12px;margin-top:13px;font-size:13px}
+.container{max-width:1150px;margin:22px auto;padding:0 15px}
+.notice{background:#fff7e6;border-left:4px solid var(--gold);padding:12px 15px;border-radius:8px;margin-bottom:18px}
+.layout{display:grid;grid-template-columns:235px minmax(0,1fr);gap:18px;align-items:start}
+nav,.panel,.card{background:white;border:1px solid #e0e7f1;border-radius:14px;box-shadow:0 4px 15px #10264a0a}
+nav{padding:12px;position:sticky;top:12px}
+nav h3{margin:8px 8px 12px;font-size:15px}
+nav button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:10px 11px;border-radius:8px;cursor:pointer;color:var(--ink);font-size:14px;margin:2px 0}
+nav button:hover,nav button.active{background:#eaf1ff;color:#174d9f;font-weight:700}
+main{min-width:0}
+.panel{padding:20px;margin-bottom:18px}
+.panel h2{margin:0 0 5px;font-size:23px}
+.sub{color:var(--muted);margin:0 0 17px;font-size:14px}
+.module{display:none}
+.module.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+label{font-size:13px;font-weight:700;color:#34435a}
+input,select{width:100%;padding:10px 11px;border:1px solid #ccd6e4;border-radius:8px;font-size:15px;background:white;color:var(--ink)}
+input:focus,select:focus{outline:2px solid #9dbcf4;border-color:var(--blue)}
+button.primary,button.secondary{border:0;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer}
+.primary{background:var(--blue);color:white}
+.primary:hover{background:#194783}
+.secondary{background:#eaf1ff;color:#174d9f}
+.result{margin-top:16px;padding:14px;border-radius:10px;background:#f4f7fc;border:1px solid #dce5f2;overflow-wrap:anywhere}
+.result h3{font-size:16px;margin:0 0 8px}
+.result p{margin:6px 0}
+.answer{font-size:18px;font-weight:800;color:var(--green)}
+.steps{padding-left:22px;margin:7px 0}
+.small{font-size:12px;color:var(--muted)}
+.examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.example{border:1px solid #dce5f2;border-radius:10px;padding:12px}
+.example strong{display:block;margin-bottom:5px}
+.example p{font-size:13px;margin:4px 0 10px;color:#526178}
+canvas{width:100%;max-width:700px;height:340px;border:1px solid #dce5f2;border-radius:10px;display:block;background:white}
+.feedback{font-weight:700;margin-top:10px}
+footer{background:#10264a;color:#e5edf9;padding:24px 15px;margin-top:28px}
+.footer-inner{max-width:1150px;margin:auto}
+footer h3{margin:0 0 10px;color:white}
+footer p{margin:5px 0;font-size:14px}
+footer .small{color:#bdcce3}
+@media(max-width:780px){.layout{grid-template-columns:1fr}nav{position:static}.grid,.examples{grid-template-columns:1fr}nav button{display:inline-block;width:auto}.panel{padding:15px}canvas{height:280px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <h1 class="brand">Math<span>Nova</span>UMG</h1>
+    <p>Asistente virtual de cálculo y precálculo</p>
+    <span class="pill">Universidad Mariano Gálvez de Guatemala · Sección A</span>
+  </div>
+</header>
+
+<div class="container">
+  <div class="notice">
+    <strong>Bienvenido a MathNovaUMG.</strong>
+    Selecciona un tema, ingresa los datos y pulsa el botón de cálculo.
+    El asistente muestra el procedimiento y el resultado. Revisa los pasos antes de utilizar cada respuesta.
+  </div>
+
+  <div class="layout">
+    <nav aria-label="Módulos del asistente">
+      <h3>Temas de estudio</h3>
+      <button class="active" data-module="inicio">Inicio y ejemplos</button>
+      <button data-module="ecuaciones">Ecuaciones lineales</button>
+      <button data-module="factorizacion">Factorización</button>
+      <button data-module="funciones">Dominio y rango</button>
+      <button data-module="composicion">Composición de funciones</button>
+      <button data-module="graficas">Gráficas</button>
+      <button data-module="limites">Límites</button>
+      <button data-module="derivadas">Derivadas</button>
+      <button data-module="integrales">Integrales</button>
+      <button data-module="aplicaciones">Máximos y mínimos</button>
+      <button data-module="cubica">Prueba de función cúbica</button>
+      <button data-module="practica">Práctica interactiva</button>
+    </nav>
+
+    <main>
+      <section class="panel module active" id="inicio">
+        <h2>Aprende paso a paso</h2>
+        <p class="sub">Elige un ejercicio de ejemplo para abrir el módulo correspondiente y cargar sus datos.</p>
+        <div class="examples">
+          <div class="example"><strong>1. Ecuación lineal</strong><p>Resolver 2x + 5 = 15.</p><button class="secondary" onclick="example('eq1')">Probar ejemplo</button></div>
+          <div class="example"><strong>2. Ecuación con x en ambos lados</strong><p>Resolver 4x + 8 = 2x + 14.</p><button class="secondary" onclick="example('eq2')">Probar ejemplo</button></div>
+          <div class="example"><strong>3. Factorización</strong><p>Factorizar x² − 5x + 6.</p><button class="secondary" onclick="example('fac')">Probar ejemplo</button></div>
+          <div class="example"><strong>4. Dominio y rango</strong><p>f(x) = 2x + 3, con dominio real.</p><button class="secondary" onclick="example('fun')">Probar ejemplo</button></div>
+          <div class="example"><strong>5. Composición</strong><p>f(x) = 2x + 1 y g(x) = x².</p><button class="secondary" onclick="example('comp')">Probar ejemplo</button></div>
+          <div class="example"><strong>6. Límite</strong><p>Calcular lim x→2 de x² + 2x + 1.</p><button class="secondary" onclick="example('lim')">Probar ejemplo</button></div>
+          <div class="example"><strong>7. Derivada</strong><p>Derivar f(x) = 2x³ + 4x + 5.</p><button class="secondary" onclick="example('der')">Probar ejemplo</button></div>
+          <div class="example"><strong>8. Integral</strong><p>Integrar 3x² + 4x + 6.</p><button class="secondary" onclick="example('int')">Probar ejemplo</button></div>
+          <div class="example"><strong>9. Máximo o mínimo</strong><p>f(x) = x² − 4x + 3.</p><button class="secondary" onclick="example('app')">Probar ejemplo</button></div>
+          <div class="example"><strong>10. Función cúbica del proyecto</strong><p>f(x) = x³ − 6x² + 9x + 1.</p><button class="secondary" onclick="example('cub')">Probar ejemplo</button></div>
+        </div>
+        <div class="result"><h3>¿Cómo usarlo?</h3><ol class="steps"><li>Selecciona un tema en el menú.</li><li>Introduce los datos solicitados.</li><li>Presiona el botón de cálculo.</li><li>Lee el procedimiento y verifica el resultado.</li></ol></div>
+      </section>
+
+      <section class="panel module" id="ecuaciones">
+        <h2>Ecuaciones lineales</h2><p class="sub">Resuelve ecuaciones de primer grado con x en uno o ambos lados.</p>
+        <div class="field"><label for="equation">Ecuación</label><input id="equation" value="2x+5=15" placeholder="Ejemplo: 2x+5=15"></div>
+        <button class="primary" onclick="solveEquation()">Resolver ecuación</button><div class="result" id="eqResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="factorizacion">
+        <h2>Factorización de trinomios</h2><p class="sub">Busca factores enteros para expresiones de la forma ax² + bx + c. Esta herramienta resuelve trinomios mónicos con raíces enteras.</p>
+        <div class="grid">
+          <div class="field"><label for="fa">Coeficiente de x² (a)</label><input id="fa" type="number" value="1"></div>
+          <div class="field"><label for="fb">Coeficiente de x (b)</label><input id="fb" type="number" value="-5"></div>
+          <div class="field"><label for="fc">Constante (c)</label><input id="fc" type="number" value="6"></div>
+        </div>
+        <button class="primary" onclick="factor()">Factorizar</button><div class="result" id="facResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="funciones">
+        <h2>Dominio y rango</h2><p class="sub">Analiza una función lineal o cuadrática sobre los números reales.</p>
+        <div class="field"><label for="functionType">Tipo de función</label><select id="functionType"><option value="linear">Lineal: ax + b</option><option value="quadratic">Cuadrática: ax² + bx + c</option></select></div>
+        <div class="grid">
+          <div class="field"><label for="fnA">Coeficiente a</label><input id="fnA" type="number" value="2"></div>
+          <div class="field"><label for="fnB">Coeficiente b</label><input id="fnB" type="number" value="3"></div>
+          <div class="field" id="fnCField"><label for="fnC">Constante c</label><input id="fnC" type="number" value="0"></div>
+        </div>
+        <button class="primary" onclick="domainRange()">Analizar dominio y rango</button><div class="result" id="funResult" aria-live="polite">Aquí aparecerá el análisis.</div>
+      </section>
+
+      <section class="panel module" id="composicion">
+        <h2>Composición de funciones</h2><p class="sub">Calcula (f ∘ g)(x) = f(g(x)) para funciones lineales f(x)=ax+b y g(x)=cx+d.</p>
+        <div class="grid">
+          <div class="field"><label for="compA">f: coeficiente a</label><input id="compA" type="number" value="2"></div>
+          <div class="field"><label for="compB">f: constante b</label><input id="compB" type="number" value="1"></div>
+          <div class="field"><label for="compC">g: coeficiente c</label><input id="compC" type="number" value="3"></div>
+          <div class="field"><label for="compD">g: constante d</label><input id="compD" type="number" value="4"></div>
+          <div class="field"><label for="compX">Valor de x</label><input id="compX" type="number" value="2"></div>
+        </div>
+        <button class="primary" onclick="compose()">Calcular composición</button><div class="result" id="compResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="graficas">
+        <h2>Gráficas de funciones</h2><p class="sub">Representa una función lineal o cuadrática y observa su comportamiento aproximado.</p>
+        <div class="field"><label for="graphType">Tipo de función</label><select id="graphType" onchange="toggleGraphFields()"><option value="linear">Lineal: ax+b</option><option value="quadratic">Cuadrática: ax²+bx+c</option></select></div>
+        <div class="grid">
+          <div class="field"><label for="graphA">Coeficiente a</label><input id="graphA" type="number" value="1"></div>
+          <div class="field"><label for="graphB">Coeficiente b</label><input id="graphB" type="number" value="-4"></div>
+          <div class="field" id="graphCField"><label for="graphC">Constante c</label><input id="graphC" type="number" value="3"></div>
+        </div>
+        <button class="primary" onclick="drawGraph()">Graficar función</button>
+        <div class="result"><canvas id="plot" width="700" height="340" aria-label="Gráfica cartesiana de la función"></canvas><p id="graphInfo">La gráfica aparecerá aquí.</p></div>
+      </section>
+
+      <section class="panel module" id="limites">
+        <h2>Límites por sustitución directa</h2><p class="sub">Evalúa el límite de ax² + bx + c cuando x se aproxima a un número. Si aparece una indeterminación, esta versión te avisará.</p>
+        <div class="grid">
+          <div class="field"><label for="limA">Coeficiente a</label><input id="limA" type="number" value="1"></div>
+          <div class="field"><label for="limB">Coeficiente b</label><input id="limB" type="number" value="2"></div>
+          <div class="field"><label for="limC">Constante c</label><input id="limC" type="number" value="1"></div>
+          <div class="field"><label for="limX">Valor al que se aproxima x</label><input id="limX" type="number" value="2"></div>
+        </div>
+        <button class="primary" onclick="calculateLimit()">Calcular límite</button><div class="result" id="limResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="derivadas">
+        <h2>Derivadas básicas</h2><p class="sub">Regla de la potencia para f(x)=axⁿ+bx+c, con n entero no negativo.</p>
+        <div class="grid">
+          <div class="field"><label for="derA">Coeficiente a</label><input id="derA" type="number" value="2"></div>
+          <div class="field"><label for="derN">Exponente n</label><input id="derN" type="number" min="0" max="10" value="3"></div>
+          <div class="field"><label for="derB">Coeficiente b de x</label><input id="derB" type="number" value="4"></div>
+          <div class="field"><label for="derC">Constante c</label><input id="derC" type="number" value="5"></div>
+        </div>
+        <button class="primary" onclick="calculateDerivative()">Derivar</button><div class="result" id="derResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="integrales">
+        <h2>Integrales indefinidas y definidas</h2><p class="sub">Integra f(x)=axⁿ+bx+c usando la regla de la potencia. También puedes evaluar una integral definida entre dos límites.</p>
+        <div class="grid">
+          <div class="field"><label for="intA">Coeficiente a</label><input id="intA" type="number" value="3"></div>
+          <div class="field"><label for="intN">Exponente n</label><input id="intN" type="number" min="0" max="10" value="2"></div>
+          <div class="field"><label for="intB">Coeficiente b de x</label><input id="intB" type="number" value="4"></div>
+          <div class="field"><label for="intC">Constante c</label><input id="intC" type="number" value="6"></div>
+          <div class="field"><label for="intLower">Límite inferior (integral definida)</label><input id="intLower" type="number" value="0"></div>
+          <div class="field"><label for="intUpper">Límite superior (integral definida)</label><input id="intUpper" type="number" value="2"></div>
+        </div>
+        <button class="primary" onclick="calculateIntegral()">Calcular integral</button><div class="result" id="intResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="aplicaciones">
+        <h2>Aplicaciones: máximos y mínimos</h2><p class="sub">Encuentra el vértice de una función cuadrática f(x)=ax²+bx+c y clasifica el extremo.</p>
+        <div class="grid">
+          <div class="field"><label for="appA">Coeficiente a</label><input id="appA" type="number" value="1"></div>
+          <div class="field"><label for="appB">Coeficiente b</label><input id="appB" type="number" value="-4"></div>
+          <div class="field"><label for="appC">Constante c</label><input id="appC" type="number" value="3"></div>
+        </div>
+        <button class="primary" onclick="calculateVertex()">Calcular vértice</button><div class="result" id="appResult" aria-live="polite">Aquí aparecerá el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="cubica">
+        <h2>Análisis de la función cúbica</h2><p class="sub">Ejemplo de prueba solicitado para el proyecto: f(x)=x³−6x²+9x+1. Calcula los puntos críticos y clasifica los extremos relativos.</p>
+        <button class="primary" onclick="analyzeCubic()">Analizar f(x)=x³−6x²+9x+1</button><div class="result" id="cubResult" aria-live="polite">Pulsa el botón para ver el procedimiento.</div>
+      </section>
+
+      <section class="panel module" id="practica">
+        <h2>Práctica interactiva</h2><p class="sub">Resuelve una ecuación lineal generada al azar. La aplicación revisará tu respuesta.</p>
+        <button class="primary" onclick="newPractice()">Generar ejercicio</button>
+        <div class="result"><h3 id="practiceQuestion">Pulsa “Generar ejercicio” para comenzar.</h3>
+          <div class="field"><label for="practiceAnswer">Tu respuesta para x</label><input id="practiceAnswer" type="number" step="any" placeholder="Escribe tu respuesta"></div>
+          <button class="secondary" onclick="checkPractice()">Comprobar respuesta</button>
+          <p id="practiceFeedback" class="feedback" aria-live="polite"></p>
+          <p id="practiceSteps"></p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <h3>Información académica</h3>
+    <p><strong>Proyecto:</strong> Asistente virtual de cálculo y precálculo</p>
+    <p><strong>Participante 1:</strong> Roberto Edel Subuyuj Martínez</p>
+    <p><strong>Carné 1:</strong> 2990-25-2400</p>
+    <p><strong>Participante 2:</strong> Bryan Jassir Velásquez León</p>
+    <p><strong>Carné 2:</strong> 2990-25-16804</p>
+    <p><strong>Curso:</strong> Precálculo · <strong>Sección:</strong> A</p>
+    <p>Universidad Mariano Gálvez de Guatemala</p>
+    <p class="small">Herramienta académica para practicar conceptos matemáticos. Comprueba los resultados y revisa las condiciones de cada método.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const num = id => Number($(id).value);
+const fmt = n => {
+  if (!Number.isFinite(n)) return String(n);
+  if (Math.abs(n) < 1e-10) n = 0;
+  return Number(n.toFixed(8)).toString();
+};
+const signed = n => n < 0 ? " − " + fmt(Math.abs(n)) : " + " + fmt(n);
+const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+function show(id, html) { $(id).innerHTML = html; }
+function validNumbers(ids) {
+  for (const id of ids) {
+    const el = $(id);
+    if (el.value.trim() === "" || !Number.isFinite(Number(el.value))) {
+      alert("Completa todos los campos con números válidos.");
+      el.focus();
+      return false;
+    }
+  }
+  return true;
+}
+function safeExponent(id, min=0, max=10) {
+  const v = num(id);
+  if (!Number.isInteger(v) || v < min || v > max) {
+    alert("El exponente debe ser un número entero entre " + min + " y " + max + ".");
+    $(id).focus();
+    return false;
+  }
+  return true;
+}
+function switchModule(id) {
+  document.querySelectorAll(".module").forEach(s => s.classList.toggle("active", s.id === id));
+  document.querySelectorAll("nav button[data-module]").forEach(b => b.classList.toggle("active", b.dataset.module === id));
+  if (id === "graficas") drawGraph();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll("nav button[data-module]").forEach(b => b.addEventListener("click", () => switchModule(b.dataset.module)));
+
+function parseLinearSide(str) {
+  let s = str.replace(/\s+/g, "").replace(/−/g, "-").replace(/²/g, "^2");
+  if (!s) throw Error("Hay un lado vacío.");
+  if (s[0] !== "+" && s[0] !== "-") s = "+" + s;
+  const terms = s.match(/[+-][^+-]+/g);
+  if (!terms) throw Error("No se pudo interpretar la expresión.");
+  let a = 0, b = 0;
+  for (let term of terms) {
+    let sign = term[0] === "-" ? -1 : 1;
+    let body = term.slice(1);
+    if (body.includes("x")) {
+      if (body.indexOf("x") !== body.length - 1) throw Error("Usa x solo como término lineal, por ejemplo 2x+3.");
+      let coeff = body.slice(0,-1);
+      if (coeff.includes("*")) coeff = coeff.replace("*","");
+      if (coeff === "") coeff = "1";
+      if (!/^\d*\.?\d+$/.test(coeff)) throw Error("Coeficiente de x no válido.");
+      a += sign * Number(coeff);
+    } else {
+      if (!/^\d*\.?\d+$/.test(body)) throw Error("Constante no válida.");
+      b += sign * Number(body);
+    }
+  }
+  return {a,b};
+}
+function solveEquation() {
+  const raw = $("equation").value;
+  try {
+    if ((raw.match(/=/g)||[]).length !== 1) throw Error("Escribe exactamente un signo igual.");
+    const [left,right] = raw.split("=");
+    const L = parseLinearSide(left), R = parseLinearSide(right);
+    const coeff = L.a - R.a, constant = R.b - L.b;
+    let html = "<h3>Procedimiento</h3><ol class='steps'>";
+    html += "<li>Separamos los términos con x de los términos constantes.</li>";
+    html += "<li>(" + fmt(L.a) + " − " + fmt(R.a) + ")x = " + fmt(R.b) + " − (" + fmt(L.b) + ")</li>";
+    html += "<li>" + fmt(coeff) + "x = " + fmt(constant) + "</li>";
+    if (Math.abs(coeff) < 1e-10) {
+      if (Math.abs(constant) < 1e-10) html += "</ol><p class='answer'>La ecuación tiene infinitas soluciones.</p>";
+      else html += "</ol><p class='answer'>La ecuación no tiene solución.</p>";
+    } else {
+      const x = constant/coeff;
+      html += "<li>Dividimos ambos lados entre " + fmt(coeff) + ".</li></ol><p class='answer'>x = " + fmt(x) + "</p>";
+      html += "<p>Comprobación: al sustituir x = " + fmt(x) + ", ambos lados valen " + fmt(L.a*x+L.b) + ".</p>";
+    }
+    show("eqResult",html);
+  } catch(e) { show("eqResult","<p style='color:var(--red)'>No se pudo resolver: "+escapeHTML(e.message)+"</p><p>Ejemplo válido: 2x+5=15.</p>"); }
+}
+
+function factor() {
+  if (!validNumbers(["fa","fb","fc"])) return;
+  const a=num("fa"), b=num("fb"), c=num("fc");
+  if (a===0) { show("facResult","<p>El coeficiente de x² debe ser distinto de cero.</p>"); return; }
+  const disc=b*b-4*a*c;
+  let html="<h3>Procedimiento</h3><ol class='steps'><li>Identificamos a="+fmt(a)+", b="+fmt(b)+", c="+fmt(c)+".</li><li>Calculamos el discriminante: b²−4ac = "+fmt(disc)+".</li>";
+  if (disc<0) { show("facResult",html+"</ol><p>No existen raíces reales. Este módulo no factoriza sobre los números reales en este caso.</p>"); return; }
+  const root=Math.sqrt(disc);
+  const r1=(-b+root)/(2*a), r2=(-b-root)/(2*a);
+  html+="<li>Aplicamos la fórmula cuadrática: x = (−b ± √(b²−4ac))/(2a).</li><li>Raíces: x₁="+fmt(r1)+" y x₂="+fmt(r2)+".</li></ol>";
+  const nearInt=n=>Math.abs(n-Math.round(n))<1e-8;
+  if (nearInt(r1)&&nearInt(r2)) {
+    html+="<p class='answer'>Factorización: "+fmt(a)+"(x − ("+fmt(r1)+"))(x − ("+fmt(r2)+"))</p>";
+    html+="<p>Si a=1 y las raíces son enteras, se puede escribir sin el factor inicial. Se comprueba multiplicando los factores.</p>";
+  } else {
+    html+="<p class='answer'>Factorización real: "+fmt(a)+"(x − ("+fmt(r1)+"))(x − ("+fmt(r2)+"))</p><p>Las raíces no son enteras; por eso no se obtiene una factorización con factores enteros.</p>";
+  }
+  show("facResult",html);
+}
+function domainRange() {
+  if (!validNumbers(["fnA","fnB","fnC"])) return;
+  const type=$("functionType").value,a=num("fnA"),b=num("fnB"),c=num("fnC");
+  let html="<h3>Procedimiento</h3><ol class='steps'><li>Identificamos el tipo de función.</li>";
+  if(type==="linear"){
+    html+="<li>f(x) = "+fmt(a)+"x"+signed(b)+". Es una función lineal o constante.</li><li>No hay denominadores ni raíces que restrinjan los valores de x.</li></ol><p class='answer'>Dominio: todos los números reales (ℝ).</p>";
+    html+="<p class='answer'>Rango: ℝ si a ≠ 0; si a = 0, el rango es {"+fmt(b)+"}.</p>";
+  } else {
+    html+="<li>f(x) = "+fmt(a)+"x²"+signed(b)+signed(c)+".</li>";
+    if(a===0) html+="<li>Como a=0, en realidad es una función lineal o constante.</li></ol><p class='answer'>Dominio: ℝ.</p><p class='answer'>Rango: "+(b!==0?"ℝ":"{"+fmt(c)+"}")+".</p>";
+    else {
+      const xv=-b/(2*a), yv=a*xv*xv+b*xv+c;
+      html+="<li>El vértice está en x = −b/(2a) = "+fmt(xv)+", y = "+fmt(yv)+".</li></ol><p class='answer'>Dominio: ℝ.</p>";
+      html+="<p class='answer'>Rango: "+(a>0?"y ≥ "+fmt(yv):"y ≤ "+fmt(yv))+".</p><p>La parábola "+(a>0?"abre hacia arriba y tiene mínimo.":"abre hacia abajo y tiene máximo.")+"</p>";
+    }
+  }
+  show("funResult",html);
+}
+function compose() {
+  if(!validNumbers(["compA","compB","compC","compD","compX"])) return;
+  const a=num("compA"),b=num("compB"),c=num("compC"),d=num("compD"),x=num("compX");
+  const gx=c*x+d, fg=a*gx+b, coeff=a*c, constant=a*d+b;
+  show("compResult","<h3>Procedimiento</h3><ol class='steps'><li>f(x) = "+fmt(a)+"x"+signed(b)+"; g(x) = "+fmt(c)+"x"+signed(d)+".</li><li>(f ∘ g)(x) = f(g(x)) = "+fmt(a)+"("+fmt(c)+"x"+signed(d)+")"+signed(b)+".</li><li>Distribuimos: (f ∘ g)(x) = "+fmt(coeff)+"x"+signed(constant)+".</li><li>Evaluamos g("+fmt(x)+") = "+fmt(gx)+".</li><li>Evaluamos f("+fmt(gx)+") = "+fmt(fg)+".</li></ol><p class='answer'>(f ∘ g)("+fmt(x)+") = "+fmt(fg)+"</p>");
+}
+function toggleGraphFields() {
+  $("graphCField").style.display=$("graphType").value==="quadratic"?"flex":"none";
+}
+function drawGraph() {
+  if(!validNumbers(["graphA","graphB","graphC"])) return;
+  const canvas=$("plot"),ctx=canvas.getContext("2d");
+  const w=canvas.width,h=canvas.height;
+  const a=num("graphA"),b=num("graphB"),c=$("graphType").value==="quadratic"?num("graphC"):0;
+  ctx.clearRect(0,0,w,h);
+  const xmin=-10,xmax=10,ymin=-10,ymax=10;
+  const X=x=> (x-xmin)/(xmax-xmin)*w;
+  const Y=y=> h-(y-ymin)/(ymax-ymin)*h;
+  ctx.strokeStyle="#e7edf5";ctx.lineWidth=1;
+  for(let x=-10;x<=10;x++){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),h);ctx.stroke();}
+  for(let y=-10;y<=10;y++){ctx.beginPath();ctx.moveTo(0,Y(y));ctx.lineTo(w,Y(y));ctx.stroke();}
+  ctx.strokeStyle="#607087";ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.moveTo(0,Y(0));ctx.lineTo(w,Y(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(X(0),0);ctx.lineTo(X(0),h);ctx.stroke();
+  ctx.fillStyle="#526178";ctx.font="11px Arial";
+  for(let x=-10;x<=10;x+=2)ctx.fillText(x,X(x)+3,Y(0)-5);
+  for(let y=-10;y<=10;y+=2)if(y!==0)ctx.fillText(y,X(0)+4,Y(y)-3);
+  ctx.strokeStyle="#2459a9";ctx.lineWidth=2.6;ctx.beginPath();
+  let started=false;
+  for(let px=0;px<=w;px++){
+    const x=xmin+(px/w)*(xmax-xmin),y=a*x*x+b*x+c;
+    if(!Number.isFinite(y)||y<ymin-100||y>ymax+100){started=false;continue;}
+    if(!started){ctx.moveTo(px,Y(y));started=true;}else ctx.lineTo(px,Y(y));
+  }
+  ctx.stroke();
+  const type=$("graphType").value;
+  $("graphInfo").textContent="Función: f(x) = "+fmt(a)+(type==="quadratic"?"x²":"x")+signed(b)+(type==="quadratic"?signed(c):"")+". La ventana visible va de x = −10 a 10 y de y = −10 a 10.";
+}
+function polynomialText(a,n,b,c) {
+  let parts=[];
+  if(a!==0) parts.push(fmt(a)+(n===0?"":n===1?"x":"x^"+n));
+  if(b!==0) parts.push((b<0?"− ":"+ ")+fmt(Math.abs(b))+"x");
+  if(c!==0) parts.push((c<0?"− ":"+ ")+fmt(Math.abs(c)));
+  if(!parts.length)return "0";
+  let out=parts[0];
+  if(out.startsWith("+ "))out=out.slice(2);
+  if(out.startsWith("− "))out="-"+out.slice(2);
+  for(let i=1;i<parts.length;i++)out+=" "+parts[i];
+  return out;
+}
+function calculateLimit() {
+  if(!validNumbers(["limA","limB","limC","limX"]))return;
+  const a=num("limA"),b=num("limB"),c=num("limC"),x=num("limX");
+  const result=a*x*x+b*x+c;
+  show("limResult","<h3>Procedimiento</h3><ol class='steps'><li>Función: f(x) = "+polynomialText(a,2,b,c)+".</li><li>Sustituimos x por "+fmt(x)+".</li><li>Calculamos: "+fmt(a)+"("+fmt(x)+")² + ("+fmt(b)+")("+fmt(x)+") + ("+fmt(c)+").</li><li>Resultado numérico: "+fmt(result)+".</li></ol><p class='answer'>El límite es "+fmt(result)+".</p><p>Como la función es un polinomio, es continua y el límite coincide con el valor de la función en ese punto.</p>");
+}
+function calculateDerivative() {
+  if(!validNumbers(["derA","derN","derB","derC"])||!safeExponent("derN"))return;
+  const a=num("derA"),n=num("derN"),b=num("derB"),c=num("derC");
+  let parts=[];
+  if(a!==0&&n!==0)parts.push(fmt(a*n)+(n===1?"": "x^"+(n-1)));
+  if(b!==0)parts.push((b<0?"− ":"+ ")+fmt(Math.abs(b)));
+  if(!parts.length)parts=["0"];
+  let out=parts[0];
+  if(out.startsWith("+ "))out=out.slice(2);
+  if(out.startsWith("− "))out="-"+out.slice(2);
+  for(let i=1;i<parts.length;i++)out+=" "+parts[i];
+  const original=polynomialText(a,n,b,c);
+  show("derResult","<h3>Procedimiento</h3><ol class='steps'><li>Función original: f(x) = "+original+".</li><li>Regla de la potencia: d/dx(axⁿ) = anxⁿ⁻¹.</li><li>La derivada de bx es b.</li><li>La derivada de una constante c es 0.</li></ol><p class='answer'>f′(x) = "+out+"</p>");
+}
+function primitiveAt(x,a,n,b,c) {
+  return a*Math.pow(x,n+1)/(n+1)+b*x*x/2+c*x;
+}
+function calculateIntegral() {
+  if(!validNumbers(["intA","intN","intB","intC","intLower","intUpper"])||!safeExponent("intN"))return;
+  const a=num("intA"),n=num("intN"),b=num("intB"),c=num("intC"),lo=num("intLower"),hi=num("intUpper");
+  const p1=a/(n+1),p2=b/2;
+  let parts=[];
+  if(a!==0)parts.push(fmt(p1)+"x^"+(n+1));
+  if(b!==0)parts.push((b<0?"− ":"+ ")+fmt(Math.abs(p2))+"x²");
+  if(c!==0)parts.push((c<0?"− ":"+ ")+fmt(Math.abs(c))+"x");
+  if(!parts.length)parts=["0"];
+  let out=parts[0];
+  if(out.startsWith("+ "))out=out.slice(2);
+  if(out.startsWith("− "))out="-"+out.slice(2);
+  for(let i=1;i<parts.length;i++)out+=" "+parts[i];
+  const flo=primitiveAt(lo,a,n,b,c),fhi=primitiveAt(hi,a,n,b,c);
+  show("intResult","<h3>Procedimiento</h3><ol class='steps'><li>Función: f(x) = "+polynomialText(a,n,b,c)+".</li><li>Aplicamos ∫xⁿ dx = xⁿ⁺¹/(n+1) + C.</li><li>Integramos cada término por separado.</li></ol><p class='answer'>Integral indefinida: ∫f(x) dx = "+out+" + C</p><hr><p>Para la integral definida entre "+fmt(lo)+" y "+fmt(hi)+":</p><ol class='steps'><li>Usamos la primitiva F(x) = "+out+".</li><li>Calculamos F("+fmt(hi)+") = "+fmt(fhi)+" y F("+fmt(lo)+") = "+fmt(flo)+".</li><li>Restamos F(b) − F(a) = "+fmt(fhi)+" − ("+fmt(flo)+").</li></ol><p class='answer'>Integral definida = "+fmt(fhi-flo)+"</p>");
+}
+function calculateVertex() {
+  if(!validNumbers(["appA","appB","appC"]))return;
+  const a=num("appA"),b=num("appB"),c=num("appC");
+  if(a===0){show("appResult","<p>Para encontrar un vértice se necesita una función cuadrática con a distinto de cero.</p>");return;}
+  const x=-b/(2*a),y=a*x*x+b*x+c;
+  show("appResult","<h3>Procedimiento</h3><ol class='steps'><li>Función: f(x) = "+fmt(a)+"x²"+signed(b)+signed(c)+".</li><li>Coordenada x del vértice: x = −b/(2a) = −("+fmt(b)+")/(2·"+fmt(a)+") = "+fmt(x)+".</li><li>Sustituimos en la función: f("+fmt(x)+") = "+fmt(y)+".</li><li>Como a "+(a>0?"es positiva, la parábola abre hacia arriba.":"es negativa, la parábola abre hacia abajo.")+"</li></ol><p class='answer'>Vértice: ("+fmt(x)+", "+fmt(y)+").</p><p class='answer'>La función tiene un "+(a>0?"mínimo":"máximo")+" de "+fmt(y)+" cuando x = "+fmt(x)+".</p>");
+}
+function analyzeCubic() {
+  const f=x=>x*x*x-6*x*x+9*x+1;
+  show("cubResult","<h3>Procedimiento</h3><ol class='steps'><li>Función: f(x) = x³ − 6x² + 9x + 1.</li><li>Derivamos: f′(x) = 3x² − 12x + 9.</li><li>Igualamos a cero: 3x² − 12x + 9 = 0.</li><li>Dividimos entre 3: x² − 4x + 3 = 0.</li><li>Factorizamos: (x − 1)(x − 3) = 0.</li><li>Puntos críticos: x = 1 y x = 3.</li><li>Evaluamos la función: f(1) = "+fmt(f(1))+" y f(3) = "+fmt(f(3))+".</li><li>Segunda derivada: f″(x) = 6x − 12.</li><li>f″(1) = −6, por lo tanto hay máximo relativo en (1, 5).</li><li>f″(3) = 6, por lo tanto hay mínimo relativo en (3, 1).</li></ol><p class='answer'>Máximo relativo: (1, 5).</p><p class='answer'>Mínimo relativo: (3, 1).</p>");
+}
+let practice=null;
+function newPractice() {
+  let a=0,x=0,b=0,c=0;
+  while(a===0)a=Math.floor(Math.random()*9)-4;
+  x=Math.floor(Math.random()*11)-5;
+  b=Math.floor(Math.random()*19)-9;
+  c=a*x+b;
+  practice={a,x,b,c};
+  $("practiceQuestion").textContent="Resuelve: "+fmt(a)+"x "+(b<0?"− "+fmt(Math.abs(b)):"+ "+fmt(b))+" = "+fmt(c);
+  $("practiceAnswer").value="";
+  $("practiceFeedback").textContent="";
+  $("practiceSteps").textContent="";
+}
+function checkPractice() {
+  if(!practice){$("practiceFeedback").textContent="Primero genera un ejercicio.";return;}
+  const answer=$("practiceAnswer").value.trim();
+  if(answer===""){ $("practiceFeedback").textContent="Escribe una respuesta antes de comprobar.";return;}
+  const val=Number(answer);
+  if(!Number.isFinite(val)){ $("practiceFeedback").textContent="Escribe un número válido.";return;}
+  const correct=Math.abs(val-practice.x)<1e-7;
+  $("practiceFeedback").style.color=correct?"var(--green)":"var(--red)";
+  $("practiceFeedback").textContent=correct?"¡Correcto! Buen trabajo.":"Todavía no es correcto. Revisa los pasos y vuelve a intentarlo.";
+  $("practiceSteps").textContent="Procedimiento: "+fmt(practice.a)+"x = "+fmt(practice.c)+" − ("+fmt(practice.b)+") = "+fmt(practice.c-practice.b)+". Luego x = "+fmt(practice.c-practice.b)+" / "+fmt(practice.a)+" = "+fmt(practice.x)+".";
+}
+function example(which) {
+  const actions={
+    eq1:()=>{$("equation").value="2x+5=15";switchModule("ecuaciones");solveEquation();},
+    eq2:()=>{$("equation").value="4x+8=2x+14";switchModule("ecuaciones");solveEquation();},
+    fac:()=>{$("fa").value=1;$("fb").value=-5;$("fc").value=6;switchModule("factorizacion");factor();},
+    fun:()=>{$("functionType").value="linear";$("fnA").value=2;$("fnB").value=3;$("fnC").value=0;switchModule("funciones");domainRange();},
+    comp:()=>{$("compA").value=2;$("compB").value=1;$("compC").value=3;$("compD").value=4;$("compX").value=2;switchModule("composicion");compose();},
+    lim:()=>{$("limA").value=1;$("limB").value=2;$("limC").value=1;$("limX").value=2;switchModule("limites");calculateLimit();},
+    der:()=>{$("derA").value=2;$("derN").value=3;$("derB").value=4;$("derC").value=5;switchModule("derivadas");calculateDerivative();},
+    int:()=>{$("intA").value=3;$("intN").value=2;$("intB").value=4;$("intC").value=6;$("intLower").value=0;$("intUpper").value=2;switchModule("integrales");calculateIntegral();},
+    app:()=>{$("appA").value=1;$("appB").value=-4;$("appC").value=3;switchModule("aplicaciones");calculateVertex();},
+    cub:()=>{switchModule("cubica");analyzeCubic();}
+  };
+  if(actions[which])actions[which]();
+}
+$("functionType").addEventListener("change",()=>{$("fnCField").style.display=$("functionType").value==="quadratic"?"flex":"none";});
+toggleGraphFields();
+$("fnCField").style.display="none";
+drawGraph();
+</script>
+</body>
+</html>
